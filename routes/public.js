@@ -73,7 +73,7 @@ router.post('/subscribe', async (req, res) => {
   if (!email) return res.json({ success:false, message:'Email gerekli' });
   try {
     await db.runAsync('INSERT OR IGNORE INTO subscribers (email,name) VALUES (?,?)', [email, name||'']);
-    res.json({ success:true, message:'Takip Ediniz! Teşekkürler.' });
+    res.json({ success:true, message:'Abone oldunuz! Teşekkürler.' });
   } catch(e) {
     res.json({ success:false, message:'Bu email zaten kayıtlı.' });
   }

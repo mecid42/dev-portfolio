@@ -417,3 +417,37 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
   .hero { padding:82px 16px 60px; }
   .projects-section,.experience-section,.skills-section,.about-section,.contact-section { padding:60px 16px; }
 }
+
+/* ===== ABOUT STATS GRID ===== */
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.about-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: border-color .2s, transform .2s;
+}
+.about-stat-card:hover {
+  border-color: var(--border-h);
+  transform: translateY(-2px);
+}
+.about-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.about-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}

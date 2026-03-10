@@ -4,15 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title><%= settings.site_name || 'Dev Portfolio' %></title>
-  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><polygon points='14,2 26,24 2,24' fill='none' stroke='white' stroke-width='2.2' stroke-linejoin='round'/><polygon points='14,2 26,24 2,24' fill='white' opacity='0.2'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <meta name="description" content="Full-Stack Developer portfolio — web, mobile & AI projects">
-  <meta property="og:title" content="Dev Portfolio">
-  <meta property="og:description" content="Full-Stack Developer portfolio">
-  <meta property="og:type" content="website">
-  <meta name="theme-color" content="#060606">
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -41,13 +35,10 @@
       <a href="#contact" data-i18n="nav_contact">İletişim</a>
     </div>
     <div class="nav-actions">
-      <!-- Dil -->
       <div class="lang-switcher">
         <button class="lang-btn active" data-lang="tr" onclick="setLang('tr')">TR</button>
         <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" data-lang="ar" onclick="setLang('ar')">ع</button>
       </div>
-      <!-- Tema -->
       <div class="theme-switcher">
         <button class="theme-btn active" data-theme="dark" onclick="setTheme('dark')">DARK</button>
         <button class="theme-btn" data-theme="light" onclick="setTheme('light')">LIGHT</button>
@@ -60,14 +51,13 @@
   <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobileMenu">
     <a href="#projects" onclick="closeMobile()" data-i18n="nav_projects">Projeler</a>
-    <a href="#experience" onclick="closeMobile()">Deneyim</a>
+    <a href="#experience" onclick="closeMobile()" data-i18n="nav_experience">Deneyim</a>
     <a href="#skills" onclick="closeMobile()" data-i18n="nav_skills">Yetenekler</a>
     <a href="#about" onclick="closeMobile()" data-i18n="nav_about">Hakkımda</a>
     <a href="#contact" onclick="closeMobile()" data-i18n="nav_contact">İletişim</a>
     <div class="mobile-lang">
       <button class="lang-btn" data-lang="tr" onclick="setLang('tr');closeMobile()">TR</button>
       <button class="lang-btn" data-lang="en" onclick="setLang('en');closeMobile()">EN</button>
-      <button class="lang-btn" data-lang="ar" onclick="setLang('ar');closeMobile()">ع</button>
     </div>
     <div class="mobile-theme">
       <button class="theme-btn" data-theme="dark" onclick="setTheme('dark');closeMobile()">DARK</button>
@@ -149,26 +139,25 @@
             </span>
           </div>
         </div>
-        <div class="card-body">
-          <h3 class="project-title"><%= project.title %></h3>
-          <p class="project-desc"><%= project.description %></p>
-          <div class="tech-stack">
-            <% project.tech_stack.split(',').slice(0,4).forEach(function(tech) { %>
-            <span class="tech-tag"><%= tech.trim() %></span>
-            <% }) %>
-          </div>
+        <h3 class="project-title"><%= project.title %></h3>
+        <p class="project-desc"><%= project.description %></p>
+        <div class="tech-stack">
+          <% project.tech_stack.split(',').slice(0,4).forEach(function(tech) { %>
+          <span class="tech-tag"><%= tech.trim() %></span>
+          <% }) %>
         </div>
         <div class="card-footer">
           <% if (project.start_date) { %>
-          <span class="project-date"><%= new Date(project.start_date).toLocaleDateString('tr-TR',{month:'short',year:'numeric'}) %><% if(project.status==='delivered'&&project.end_date){ %> → <%= new Date(project.end_date).toLocaleDateString('tr-TR',{month:'short',year:'numeric'}) %><% } %></span>
+          <span class="project-date"><%= new Date(project.start_date).toLocaleDateString('tr-TR',{month:'short',year:'numeric'}) %></span>
           <% } else { %><span></span><% } %>
           <div class="card-links">
+            <!-- LIKE — admin'den koyulan sayı ile başlar -->
             <button class="like-btn <%= project.userLiked ? 'liked' : '' %>" data-id="<%= project.id %>" onclick="toggleLike(this)">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="<%= project.userLiked ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
               <span class="like-count"><%= project.likes || 0 %></span>
             </button>
-            <% if(project.github_url) { %><a href="<%= project.github_url %>" target="_blank" class="card-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg></a><% } %>
-            <% if(project.live_url) { %><a href="<%= project.live_url %>" target="_blank" class="card-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><% } %>
+            <% if(project.github_url) { %><a href="<%= project.github_url %>" target="_blank" class="card-link" title="GitHub"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg></a><% } %>
+            <% if(project.live_url) { %><a href="<%= project.live_url %>" target="_blank" class="card-link" title="Canlı"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><% } %>
             <a href="/projects/<%= project.id %>" class="card-link card-link-detail">Detay →</a>
           </div>
         </div>
@@ -214,18 +203,16 @@
       <h2 class="section-title" data-i18n="sec_skills_title">Teknoloji Stack</h2>
     </div>
     <div class="skills-container">
-      <%
-        const categories = [...new Set(skills.map(s => s.category))];
-        categories.forEach(function(cat) {
-          const catSkills = skills.filter(s => s.category === cat);
-      %>
+      <% const categories = [...new Set(skills.map(s => s.category))];
+         categories.forEach(function(cat) {
+           const catSkills = skills.filter(s => s.category === cat); %>
       <div class="skill-group">
         <h3 class="skill-group-title"><%= cat %></h3>
         <div class="skill-list">
           <% catSkills.forEach(function(skill) { %>
           <div class="skill-item">
             <div class="skill-info"><span class="skill-name"><%= skill.name %></span><span class="skill-level"><%= skill.level %>%</span></div>
-            <div class="skill-bar"><div class="skill-fill" style="width:0%" data-width="<%= skill.level %>%"></div></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="<%= skill.level %>%" style="width:0%"></div></div>
           </div>
           <% }) %>
         </div>
@@ -242,21 +229,41 @@
         <div class="section-tag" data-i18n="sec_about">/ Hakkımda</div>
         <h2 class="section-title">
           <%= settings.about_title || 'Merhaba, Ben' %><br>
-          <span class="name-highlight"><%= settings.about_subtitle || 'Bir Yazılım Mühendisiyim' %></span>
+          <span class="name-highlight"><%= settings.about_sub || 'Bir Yazılım Mühendisiyim' %></span>
         </h2>
         <p class="about-desc"><%= settings.about_text || '' %></p>
         <div class="about-tags">
-          <% if(settings.about_tag1) { %><span class="about-tag"><%= settings.about_tag1 %></span><% } %>
-          <% if(settings.about_tag2) { %><span class="about-tag"><%= settings.about_tag2 %></span><% } %>
-          <% if(settings.about_tag3) { %><span class="about-tag"><%= settings.about_tag3 %></span><% } %>
-          <% if(settings.about_tag4) { %><span class="about-tag"><%= settings.about_tag4 %></span><% } %>
+          <span class="about-tag">🎓 <%= settings.about_education || 'Bilgisayar Müh.' %></span>
+          <span class="about-tag">💻 <%= settings.about_name || 'Full-Stack Dev' %></span>
+          <span class="about-tag">📍 <%= settings.about_location || 'Türkiye 🇹🇷' %></span>
+          <span class="about-tag">☕ Coffee: <%= settings.about_coffee || '∞' %></span>
         </div>
         <div class="about-links">
           <% if(settings.github_url) { %><a href="<%= settings.github_url %>" target="_blank" class="about-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg><span>GitHub</span></a><% } %>
           <% if(settings.linkedin_url) { %><a href="<%= settings.linkedin_url %>" target="_blank" class="about-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg><span>LinkedIn</span></a><% } %>
         </div>
       </div>
+
+      <!-- ABOUT VISUAL — animated stats + terminal -->
       <div class="about-visual">
+        <div class="about-stats-grid">
+          <div class="about-stat-card">
+            <div class="about-stat-num"><%= stats.projects %></div>
+            <div class="about-stat-label">Toplam Proje</div>
+          </div>
+          <div class="about-stat-card">
+            <div class="about-stat-num"><%= stats.delivered %></div>
+            <div class="about-stat-label">Teslim Edildi</div>
+          </div>
+          <div class="about-stat-card">
+            <div class="about-stat-num"><%= settings.about_experience || '1+' %></div>
+            <div class="about-stat-label">Yıl Deneyim</div>
+          </div>
+          <div class="about-stat-card">
+            <div class="about-stat-num"><%= stats.visitors %></div>
+            <div class="about-stat-label">Ziyaretçi</div>
+          </div>
+        </div>
         <div class="terminal-window">
           <div class="terminal-header">
             <span class="t-dot red"></span><span class="t-dot yellow"></span><span class="t-dot green"></span>
@@ -264,12 +271,17 @@
           </div>
           <div class="terminal-body">
             <pre><code><span class="t-bracket">{</span>
-  <span class="t-key">"name"</span>: <span class="t-str">"<%= settings.terminal_name || 'Full-Stack Developer' %>"</span>,
-  <span class="t-key">"education"</span>: <span class="t-str">"<%= settings.terminal_education || 'Bilgisayar Mühendisliği' %>"</span>,
-  <span class="t-key">"experience"</span>: <span class="t-str">"<%= settings.terminal_experience || '3+ years' %>"</span>,
-  <span class="t-key">"location"</span>: <span class="t-str">"<%= settings.terminal_location || 'Türkiye 🇹🇷' %>"</span>,
-  <span class="t-key">"status"</span>: <span class="t-green">"<%= settings.terminal_status || 'available' %>"</span>,
-  <span class="t-key">"coffee"</span>: <span class="t-num">∞</span>
+  <span class="t-key">"name"</span>: <span class="t-str">"<%= settings.about_name || 'Full-Stack Developer' %>"</span>,
+  <span class="t-key">"education"</span>: <span class="t-str">"<%= settings.about_education || 'Bilgisayar Mühendisliği' %>"</span>,
+  <span class="t-key">"experience"</span>: <span class="t-str">"<%= settings.about_experience || '1+ years' %>"</span>,
+  <span class="t-key">"location"</span>: <span class="t-str">"<%= settings.about_location || 'Türkiye 🇹🇷' %>"</span>,
+  <span class="t-key">"status"</span>: <span class="t-green">"<%= settings.about_status || 'available' %>"</span>,
+  <span class="t-key">"passion"</span>: [
+    <span class="t-str">"<%= settings.about_passion_1 || 'Clean Code' %>"</span>,
+    <span class="t-str">"<%= settings.about_passion_2 || 'Performance' %>"</span>,
+    <span class="t-str">"<%= settings.about_passion_3 || 'Innovation' %>"</span>
+  ],
+  <span class="t-key">"coffee"</span>: <span class="t-num"><%= settings.about_coffee || '∞' %></span>
 <span class="t-bracket">}</span></code></pre>
           </div>
         </div>
@@ -277,16 +289,16 @@
     </div>
   </section>
 
-  <!-- SUBSCRIBE -->
+  <!-- TAKİP ET (eski "Abone Ol") -->
   <section class="subscribe-section">
     <div class="subscribe-inner">
-      <div class="section-tag" data-i18n="sub_tag">/ Haberdar Ol</div>
-      <h2 class="subscribe-title" data-i18n="sub_title">Yeni Projelerimden Haberdar Olun</h2>
-      <p class="subscribe-desc" data-i18n="sub_desc">Yeni proje lansmanları ve güncellemeler için bültenime abone olun.</p>
+      <div class="section-tag">/ Takip Et</div>
+      <h2 class="subscribe-title">Gelişmeleri Takip Et</h2>
+      <p class="subscribe-desc">Yeni projeler ve güncellemelerden haberdar olmak için e-posta bırak.</p>
       <form class="subscribe-form" id="subscribeForm">
-        <input type="text" id="subName" class="sub-input" placeholder="Adınız" data-i18n="sub_name">
-        <input type="email" id="subEmail" class="sub-input" placeholder="E-posta adresiniz" data-i18n="sub_email" required>
-        <button type="submit" class="btn-primary"><span data-i18n="sub_btn">Abone Ol</span></button>
+        <input type="text" id="subName" class="sub-input" placeholder="Adın">
+        <input type="email" id="subEmail" class="sub-input" placeholder="E-posta adresin" required>
+        <button type="submit" class="btn-primary">Takip Et</button>
       </form>
       <div id="subscribeMsg" class="form-message" style="display:none"></div>
     </div>
@@ -317,11 +329,11 @@
       </div>
       <form class="contact-form" id="contactForm">
         <div class="form-row">
-          <div class="form-group"><label data-i18n="contact_name">Ad Soyad</label><input type="text" id="contactName" placeholder="John Doe" data-i18n="contact_name_ph" required></div>
+          <div class="form-group"><label data-i18n="contact_name">Ad Soyad</label><input type="text" id="contactName" placeholder="John Doe" required></div>
           <div class="form-group"><label data-i18n="contact_email">E-posta</label><input type="email" id="contactEmail" placeholder="john@example.com" required></div>
         </div>
-        <div class="form-group"><label data-i18n="contact_subject">Konu</label><input type="text" id="contactSubject" placeholder="Proje hakkında..." data-i18n="contact_subject_ph"></div>
-        <div class="form-group"><label data-i18n="contact_message">Mesaj</label><textarea id="contactMessage" rows="5" placeholder="Projenizi anlatın..." data-i18n="contact_msg_ph" required></textarea></div>
+        <div class="form-group"><label data-i18n="contact_subject">Konu</label><input type="text" id="contactSubject" placeholder="Proje hakkında..."></div>
+        <div class="form-group"><label data-i18n="contact_message">Mesaj</label><textarea id="contactMessage" rows="5" placeholder="Projenizi anlatın..." required></textarea></div>
         <button type="submit" class="btn-primary btn-full"><span data-i18n="contact_btn">Mesaj Gönder</span></button>
         <div id="contactMsg" class="form-message" style="display:none"></div>
       </form>

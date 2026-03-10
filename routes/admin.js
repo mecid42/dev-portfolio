@@ -161,19 +161,35 @@ router.post('/projects/:id/delete', requireAuth, async (req, res) => {
 });
 
 router.get('/likes', requireAuth, async (req, res) => {
+  const projects = await db.allAsync(`
+    SELECT p.id, p.title, COUNT(pl.id) as likes
+    FROM projects p
+    LEFT JOIN project_likes pl ON pl.project_id = p.id
+    GROUP BY p.id ORDER BY p.sort_order
+  `);
   const likes = await db.allAsync(`
     SELECT pl.*, p.title as project_title 
     FROM project_likes pl 
     LEFT JOIN projects p ON pl.project_id = p.id 
     ORDER BY pl.created_at DESC LIMIT 200
   `);
-  const topProjects = await db.allAsync(`
-    SELECT p.title, COUNT(pl.id) as likes 
-    FROM project_likes pl 
-    LEFT JOIN projects p ON pl.project_id = p.id 
-    GROUP BY pl.project_id ORDER BY likes DESC
-  `);
-  res.render('admin/likes', { likes, topProjects, adminUsername: req.session.adminUsername });
+  res.render('admin/likes', { likes, projects, adminUsername: req.session.adminUsername });
+});
+
+// Admin'den başlangıç like sayısı ayarla
+router.post('/likes/set', requireAuth, async (req, res) => {
+  const { project_id, count } = req.body;
+  const n = parseInt(count) || 0;
+  // Önce bu projenin admin-seed like'larını sil
+  await db.runAsync(`DELETE FROM project_likes WHERE project_id=? AND session_id='admin_seed'`, [project_id]);
+  // Sonra istenen sayı kadar fake like ekle
+  for (let i = 0; i < n; i++) {
+    await db.runAsync(
+      `INSERT OR IGNORE INTO project_likes (project_id, session_id) VALUES (?, ?)`,
+      [project_id, `admin_seed_${i}`]
+    );
+  }
+  res.redirect('/admin/likes?saved=1');
 });
 
 router.get('/subscribers', requireAuth, async (req, res) => {

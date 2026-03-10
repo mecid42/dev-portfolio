@@ -2,38 +2,72 @@
   <div class="main">
     <div class="topbar"><div class="page-title">Beğeniler</div></div>
     <div class="content">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">
-        <div class="form-card">
-          <h3 style="font-family:'Syne',sans-serif;font-size:14px;margin-bottom:16px;color:#ececec">🏆 En Çok Beğenilen Projeler</h3>
-          <% topProjects.forEach(function(p) { %>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
-            <span style="color:#ececec"><%= p.title || 'Bilinmeyen' %></span>
-            <span class="badge badge-red" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444">❤️ <%= p.likes %></span>
+      <% if (locals.saved) { %><div class="alert alert-success">✓ Kaydedildi.</div><% } %>
+
+      <!-- Başlangıç like sayısı ayarla -->
+      <div class="form-card" style="margin-bottom:20px">
+        <h3 style="font-family:'Syne',sans-serif;font-size:14px;color:#ececec;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          ❤️ Proje Like Sayısı Ayarla
+        </h3>
+        <p style="color:#555;font-size:12px;margin-bottom:20px">Her proje için başlangıç like sayısını kendin belirle. Kullanıcıların verdiği likeler bunun üstüne eklenir.</p>
+        <form method="POST" action="/admin/likes/set">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Proje</label>
+              <select name="project_id" class="form-control">
+                <% projects.forEach(p => { %>
+                <option value="<%= p.id %>"><%= p.title %> (şu an: <%= p.likes %> like)</option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Başlangıç Like Sayısı</label>
+              <input type="number" name="count" class="form-control" min="0" max="9999" placeholder="örn: 42">
+            </div>
           </div>
-          <% }) %>
-          <% if (!topProjects.length) { %><p style="color:#444;text-align:center;padding:20px">Henüz beğeni yok</p><% } %>
-        </div>
-        <div class="form-card">
-          <h3 style="font-family:'Syne',sans-serif;font-size:14px;margin-bottom:16px;color:#ececec">📊 İstatistikler</h3>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;justify-content:space-between"><span style="color:#666">Toplam Beğeni</span><span style="color:#ececec;font-family:'JetBrains Mono',monospace"><%= likes.length %></span></div>
-          </div>
-        </div>
+          <div class="form-actions"><button type="submit" class="btn-sm primary">Kaydet →</button></div>
+        </form>
       </div>
-      <div class="table-wrap">
-        <div class="table-header"><div class="table-title">Son Beğeniler</div></div>
-        <table>
-          <thead><tr><th>Proje</th><th>Oturum ID</th><th>Zaman</th></tr></thead>
+
+      <!-- Proje like özeti -->
+      <div class="form-card">
+        <h3 style="font-family:'Syne',sans-serif;font-size:14px;color:#ececec;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          📊 Proje Özeti
+        </h3>
+        <table class="data-table">
+          <thead><tr><th>Proje</th><th>Toplam Like</th></tr></thead>
           <tbody>
-            <% likes.forEach(function(l) { %>
+            <% projects.forEach(p => { %>
             <tr>
-              <td style="color:#ececec"><%= l.project_title || 'Silinmiş Proje' %></td>
-              <td style="color:#555;font-family:'JetBrains Mono',monospace;font-size:10px"><%= l.session_id.substring(0,16) %>...</td>
-              <td style="color:#444;font-size:11px"><%= new Date(l.created_at).toLocaleString('tr-TR') %></td>
+              <td><%= p.title %></td>
+              <td>❤️ <%= p.likes %></td>
             </tr>
             <% }) %>
           </tbody>
         </table>
+      </div>
+
+      <!-- Son likeler -->
+      <div class="form-card">
+        <h3 style="font-family:'Syne',sans-serif;font-size:14px;color:#ececec;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          🕐 Son Beğeniler
+        </h3>
+        <% if (likes.length === 0) { %>
+          <p style="color:#444;font-size:13px">Henüz beğeni yok.</p>
+        <% } else { %>
+        <table class="data-table">
+          <thead><tr><th>Proje</th><th>Oturum</th><th>Tarih</th></tr></thead>
+          <tbody>
+            <% likes.slice(0,50).forEach(l => { %>
+            <tr>
+              <td><%= l.project_title || '-' %></td>
+              <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555"><%= l.session_id.substring(0,16) %>...</td>
+              <td style="font-size:11px;color:#555"><%= new Date(l.created_at).toLocaleDateString('tr-TR') %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } %>
       </div>
     </div>
   </div>

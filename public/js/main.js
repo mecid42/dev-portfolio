@@ -51,32 +51,6 @@ const T = {
     footer_text:'Writing code from Turkey to the world 🇹🇷',
     status_delivered:'Delivered', status_progress:'In Progress', status_planned:'Planned',
     exp_title:'Career Journey', exp_tag:'/ Experience', exp_current:'Currently Working',
-  },
-  ar: {
-    nav_projects:'المشاريع', nav_experience:'الخبرة', nav_skills:'المهارات',
-    nav_about:'عني', nav_contact:'تواصل', nav_admin:'لوحة التحكم', nav_cta:'تواصل معي',
-    badge_available:'متاح · عمل حر وبدوام كامل',
-    stat_projects:'مشروع', stat_delivered:'مُسلَّم', stat_visitors:'زائر',
-    btn_see_projects:'عرض المشاريع', btn_download_cv:'تحميل السيرة',
-    sec_projects:'/ المشاريع', sec_projects_title:'أحدث الأعمال',
-    sec_projects_desc:'مشاريعي وحالتها الحالية',
-    filter_all:'الكل', filter_delivered:'مُسلَّم', filter_progress:'جارٍ',
-    sec_skills:'/ المهارات', sec_skills_title:'التقنيات المستخدمة',
-    sec_about:'/ عني', sec_about_title:'مرحباً، أنا', sec_about_sub:'مهندس برمجيات',
-    about_btn_github:'GitHub', about_btn_linkedin:'LinkedIn',
-    sub_tag:'/ ابق على اطلاع', sub_title:'كن أول من يعلم بمشاريعي',
-    sub_desc:'اشترك في نشرتي البريدية للحصول على آخر المشاريع.',
-    sub_name:'اسمك', sub_email:'بريدك الإلكتروني', sub_btn:'اشتراك',
-    contact_tag:'/ تواصل', contact_title:'لنتحدث',
-    contact_desc:'هل لديك مشروع؟ لنعمل معاً.',
-    contact_available:'متاح للمشاريع الجديدة', contact_response:'وقت الرد: ~٢٤ ساعة',
-    contact_name:'الاسم الكامل', contact_email:'البريد الإلكتروني',
-    contact_subject:'الموضوع', contact_message:'الرسالة',
-    contact_name_ph:'محمد أحمد', contact_subject_ph:'حول مشروع...', contact_msg_ph:'أخبرني عن مشروعك...',
-    contact_btn:'إرسال الرسالة', detail_btn:'← التفاصيل', scroll:'تمرير',
-    footer_text:'أكتب الكود من تركيا إلى العالم 🇹🇷',
-    status_delivered:'مُسلَّم', status_progress:'جارٍ', status_planned:'مخطط',
-    exp_title:'المسيرة المهنية', exp_tag:'/ الخبرة', exp_current:'أعمل حالياً',
   }
 };
 
@@ -87,7 +61,7 @@ function setLang(lang) {
   localStorage.setItem('lang', lang);
   const t = T[lang];
   if (!t) return;
-  const isAr = lang === 'ar';
+  const isAr = false;
   document.documentElement.setAttribute('lang', lang);
   document.documentElement.setAttribute('dir', isAr ? 'rtl' : 'ltr');
 
