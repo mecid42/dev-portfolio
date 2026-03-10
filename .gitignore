@@ -1,0 +1,7 @@
+node_modules
+.env
+npm-debug.log
+portfolio.db-shm
+portfolio.db-wal
+*.db-shm
+*.db-wal
