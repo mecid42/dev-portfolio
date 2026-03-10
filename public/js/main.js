@@ -15,8 +15,8 @@ const T = {
     sec_about:'/ Hakkımda', sec_about_title:'Merhaba, Ben', sec_about_sub:'Bir Yazılım Mühendisiyim',
     about_btn_github:'GitHub', about_btn_linkedin:'LinkedIn',
     sub_tag:'/ Haberdar Ol', sub_title:'Yeni Projelerimden Haberdar Olun',
-    sub_desc:'Yeni proje lansmanları ve güncellemeler için bültenime takip et.',
-    sub_name:'Adınız', sub_email:'E-posta adresiniz', sub_btn:'Takip Et',
+    sub_desc:'Yeni proje lansmanları ve güncellemeler için bültenime abone olun.',
+    sub_name:'Adınız', sub_email:'E-posta adresiniz', sub_btn:'Abone Ol',
     contact_tag:'/ İletişim', contact_title:'Konuşalım',
     contact_desc:'Bir projeniz mi var? Birlikte çalışalım.',
     contact_available:'Yeni projeler için müsaitim', contact_response:'Yanıt süresi: ~24 saat',
@@ -234,7 +234,7 @@ document.getElementById('subscribeForm')?.addEventListener('submit', async e => 
     msg.textContent = data.message;
     if (data.success) e.target.reset();
   } catch(err) { msg.style.display='block'; msg.className='form-message error'; msg.textContent='Bağlantı hatası'; }
-  btn.disabled = false; btn.textContent = T[currentLang]?.sub_btn || 'Takip Et';
+  btn.disabled = false; btn.textContent = T[currentLang]?.sub_btn || 'Abone Ol';
 });
 
 document.getElementById('contactForm')?.addEventListener('submit', async e => {
