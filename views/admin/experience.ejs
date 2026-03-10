@@ -1,0 +1,44 @@
+<%- include('_sidebar', { page: 'experience', adminUsername }) %>
+  <div class="main">
+    <div class="topbar"><div class="page-title">Deneyim</div></div>
+    <div class="content">
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Pozisyon</th><th>Şirket</th><th>Süre</th><th>Durum</th><th></th></tr></thead>
+            <tbody>
+              <% experience.forEach(function(e) { %>
+              <tr>
+                <td style="color:#ececec;font-weight:600"><%= e.position %></td>
+                <td style="color:#3b82f6"><%= e.company %></td>
+                <td style="color:#555;font-size:11px;font-family:'JetBrains Mono',monospace"><%= e.start_date %><%= e.end_date ? ' → '+e.end_date : '' %></td>
+                <td><span class="badge <%= e.is_current ? 'badge-green' : 'badge-blue' %>"><%= e.is_current ? 'Devam Ediyor' : 'Tamamlandı' %></span></td>
+                <td>
+                  <form method="POST" action="/admin/experience/<%= e.id %>/delete" onsubmit="return confirm('Silmek istiyor musunuz?')">
+                    <button type="submit" class="action-btn delete">Sil</button>
+                  </form>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-card">
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;margin-bottom:20px;color:#ececec">Yeni Deneyim Ekle</h3>
+          <form method="POST" action="/admin/experience/add">
+            <div class="form-group"><label>Şirket Adı</label><input type="text" name="company" class="form-control" required placeholder="TechCorp A.Ş."></div>
+            <div class="form-group"><label>Pozisyon</label><input type="text" name="position" class="form-control" required placeholder="Senior Developer"></div>
+            <div class="form-group"><label>Açıklama</label><textarea name="description" class="form-control" rows="3" placeholder="Ne yaptınız..."></textarea></div>
+            <div class="form-row">
+              <div class="form-group"><label>Başlangıç</label><input type="text" name="start_date" class="form-control" placeholder="2023-01"></div>
+              <div class="form-group"><label>Bitiş</label><input type="text" name="end_date" class="form-control" placeholder="2024-06"></div>
+            </div>
+            <div class="form-group"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" name="is_current" value="1" style="accent-color:#3b82f6"> Hâlâ devam ediyor</label></div>
+            <div class="form-group"><label>Sıralama</label><input type="number" name="sort_order" class="form-control" value="<%= experience.length+1 %>"></div>
+            <button type="submit" class="btn-sm primary" style="width:100%;justify-content:center">Ekle →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body></html>

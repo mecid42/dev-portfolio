@@ -1,0 +1,67 @@
+<%- include('_sidebar', { page: 'skills', adminUsername }) %>
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title">Yetenekler</div>
+    </div>
+    <div class="content">
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Yetenek</th><th>Kategori</th><th>Seviye</th><th>Sıra</th><th></th></tr></thead>
+            <tbody>
+              <% skills.forEach(function(s) { %>
+              <tr>
+                <td style="color:#ececec"><%= s.name %></td>
+                <td><span class="badge badge-blue"><%= s.category %></span></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;min-width:80px">
+                      <div style="width:<%= s.level %>%;height:100%;background:#3b82f6;border-radius:2px"></div>
+                    </div>
+                    <span style="color:#555;font-size:11px"><%= s.level %>%</span>
+                  </div>
+                </td>
+                <td style="color:#444"><%= s.sort_order %></td>
+                <td>
+                  <form method="POST" action="/admin/skills/<%= s.id %>/delete" onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
+                    <button type="submit" class="action-btn delete">Sil</button>
+                  </form>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-card">
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;margin-bottom:20px;color:#ececec">Yeni Yetenek Ekle</h3>
+          <form method="POST" action="/admin/skills/add">
+            <div class="form-group">
+              <label>Yetenek Adı</label>
+              <input type="text" name="name" class="form-control" required placeholder="React, Python...">
+            </div>
+            <div class="form-group">
+              <label>Kategori</label>
+              <select name="category" class="form-control">
+                <option>Frontend</option>
+                <option>Backend</option>
+                <option>DevOps</option>
+                <option>Mobile</option>
+                <option>Diğer</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Seviye (0-100)</label>
+              <input type="number" name="level" class="form-control" min="0" max="100" value="80">
+            </div>
+            <div class="form-group">
+              <label>Sıralama</label>
+              <input type="number" name="sort_order" class="form-control" value="<%= skills.length + 1 %>">
+            </div>
+            <button type="submit" class="btn-sm primary" style="width:100%;justify-content:center">Ekle →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

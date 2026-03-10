@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title><%= settings.site_name || 'Dev Portfolio' %></title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><polygon points='14,2 26,24 2,24' fill='none' stroke='white' stroke-width='2.2' stroke-linejoin='round'/><polygon points='14,2 26,24 2,24' fill='white' opacity='0.2'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta name="description" content="Full-Stack Developer portfolio — web, mobile & AI projects">
+  <meta property="og:title" content="Dev Portfolio">
+  <meta property="og:description" content="Full-Stack Developer portfolio">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#060606">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="nav-logo">
+      <div class="logo-img-wrap">
+        <% if (settings.logo_url) { %>
+          <img src="<%= settings.logo_url %>" alt="logo" class="logo-img">
+        <% } else { %>
+          <svg class="logo-svg" width="28" height="28" viewBox="0 0 28 28">
+            <polygon points="14,2 26,24 2,24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+            <polygon points="14,2 26,24 2,24" fill="currentColor" opacity="0.15"/>
+          </svg>
+        <% } %>
+      </div>
+      <span class="logo-text"><%= settings.site_name || 'DEV.IO' %></span>
+    </a>
+    <div class="nav-links">
+      <a href="#projects" data-i18n="nav_projects">Projeler</a>
+      <a href="#experience" data-i18n="nav_experience">Deneyim</a>
+      <a href="#skills" data-i18n="nav_skills">Yetenekler</a>
+      <a href="#about" data-i18n="nav_about">Hakkımda</a>
+      <a href="#contact" data-i18n="nav_contact">İletişim</a>
+    </div>
+    <div class="nav-actions">
+      <!-- Dil -->
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="tr" onclick="setLang('tr')">TR</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="ar" onclick="setLang('ar')">ع</button>
+      </div>
+      <!-- Tema -->
+      <div class="theme-switcher">
+        <button class="theme-btn active" data-theme="dark" onclick="setTheme('dark')">DARK</button>
+        <button class="theme-btn" data-theme="light" onclick="setTheme('light')">LIGHT</button>
+      </div>
+      <a href="#contact" class="btn-nav-primary" data-i18n="nav_cta">İletişime Geç</a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#projects" onclick="closeMobile()" data-i18n="nav_projects">Projeler</a>
+    <a href="#experience" onclick="closeMobile()">Deneyim</a>
+    <a href="#skills" onclick="closeMobile()" data-i18n="nav_skills">Yetenekler</a>
+    <a href="#about" onclick="closeMobile()" data-i18n="nav_about">Hakkımda</a>
+    <a href="#contact" onclick="closeMobile()" data-i18n="nav_contact">İletişim</a>
+    <div class="mobile-lang">
+      <button class="lang-btn" data-lang="tr" onclick="setLang('tr');closeMobile()">TR</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en');closeMobile()">EN</button>
+      <button class="lang-btn" data-lang="ar" onclick="setLang('ar');closeMobile()">ع</button>
+    </div>
+    <div class="mobile-theme">
+      <button class="theme-btn" data-theme="dark" onclick="setTheme('dark');closeMobile()">DARK</button>
+      <button class="theme-btn" data-theme="light" onclick="setTheme('light');closeMobile()">LIGHT</button>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-grid-overlay"></div>
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-badge reveal">
+        <span class="badge-dot"></span>
+        <span data-i18n="badge_available">Müsait · Freelance & Full-time</span>
+      </div>
+      <h1 class="hero-title reveal">
+        <%= (settings.hero_title || 'BUILDING THE FUTURE').toUpperCase() %><span class="title-accent">.</span>
+      </h1>
+      <p class="hero-sub reveal"><%= settings.hero_subtitle || 'Full-Stack Developer & Computer Engineer' %></p>
+      <div class="hero-stats reveal">
+        <div class="stat-item">
+          <span class="stat-num" data-target="<%= stats.projects %>">0</span>
+          <span class="stat-label" data-i18n="stat_projects">Proje</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" data-target="<%= stats.delivered %>">0</span>
+          <span class="stat-label" data-i18n="stat_delivered">Teslim</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" data-target="<%= stats.visitors %>">0</span>
+          <span class="stat-label" data-i18n="stat_visitors">Ziyaretçi</span>
+        </div>
+      </div>
+      <div class="hero-cta reveal">
+        <a href="#projects" class="btn-primary">
+          <svg width="13" height="13" viewBox="0 0 28 28"><polygon points="14,2 26,24 2,24" fill="currentColor"/></svg>
+          <span data-i18n="btn_see_projects">Projeleri Gör</span>
+        </a>
+        <a href="#contact" class="btn-secondary">
+          <span data-i18n="nav_cta">İletişime Geç</span>
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span data-i18n="scroll">Scroll</span>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="projects-section" id="projects">
+    <canvas id="sphere-projects" class="section-sphere section-sphere-right" width="200" height="200"></canvas>
+    <div class="section-header">
+      <div class="section-tag" data-i18n="sec_projects">/ Projeler</div>
+      <h2 class="section-title" data-i18n="sec_projects_title">Son Çalışmalar</h2>
+      <p class="section-desc" data-i18n="sec_projects_desc">Geliştirdiğim projeler ve mevcut durumları</p>
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all" data-i18n="filter_all">Tümü</button>
+        <button class="filter-btn" data-filter="delivered" data-i18n="filter_delivered">Teslim Edildi</button>
+        <button class="filter-btn" data-filter="in_progress" data-i18n="filter_progress">Devam Ediyor</button>
+        <button class="filter-btn" data-filter="web">Web</button>
+        <button class="filter-btn" data-filter="mobile">Mobile</button>
+        <button class="filter-btn" data-filter="ai">AI</button>
+      </div>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+      <% projects.forEach(function(project) { %>
+      <div class="project-card" data-status="<%= project.status %>" data-category="<%= project.category %>">
+        <div class="card-header">
+          <div class="project-category"><%= project.category.toUpperCase() %></div>
+          <div class="project-status status-<%= project.status %>">
+            <span class="status-dot"></span>
+            <span class="status-text-<%= project.status %>">
+              <%= project.status === 'delivered' ? 'Teslim Edildi' : project.status === 'in_progress' ? 'Devam Ediyor' : 'Planlanıyor' %>
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h3 class="project-title"><%= project.title %></h3>
+          <p class="project-desc"><%= project.description %></p>
+          <div class="tech-stack">
+            <% project.tech_stack.split(',').slice(0,4).forEach(function(tech) { %>
+            <span class="tech-tag"><%= tech.trim() %></span>
+            <% }) %>
+          </div>
+        </div>
+        <div class="card-footer">
+          <% if (project.start_date) { %>
+          <span class="project-date"><%= new Date(project.start_date).toLocaleDateString('tr-TR',{month:'short',year:'numeric'}) %><% if(project.status==='delivered'&&project.end_date){ %> → <%= new Date(project.end_date).toLocaleDateString('tr-TR',{month:'short',year:'numeric'}) %><% } %></span>
+          <% } else { %><span></span><% } %>
+          <div class="card-links">
+            <button class="like-btn <%= project.userLiked ? 'liked' : '' %>" data-id="<%= project.id %>" onclick="toggleLike(this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="<%= project.userLiked ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count"><%= project.likes || 0 %></span>
+            </button>
+            <% if(project.github_url) { %><a href="<%= project.github_url %>" target="_blank" class="card-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg></a><% } %>
+            <% if(project.live_url) { %><a href="<%= project.live_url %>" target="_blank" class="card-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><% } %>
+            <a href="/projects/<%= project.id %>" class="card-link card-link-detail">Detay →</a>
+          </div>
+        </div>
+        <% if(project.status==='in_progress') { %><div class="card-progress-bar"><div class="progress-inner"></div></div><% } %>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="experience-section" id="experience">
+    <canvas id="sphere-experience" class="section-sphere section-sphere-left" width="200" height="200"></canvas>
+    <div class="section-header">
+      <div class="section-tag" data-i18n="exp_tag">/ Deneyim</div>
+      <h2 class="section-title" data-i18n="exp_title">Kariyer Yolculuğu</h2>
+    </div>
+    <div class="timeline-container">
+      <% experience.forEach(function(exp) { %>
+      <div class="timeline-item">
+        <div class="timeline-dot <%= exp.is_current ? 'active' : '' %>"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <div>
+              <h3 class="timeline-position"><%= exp.position %></h3>
+              <span class="timeline-company"><%= exp.company %></span>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:<%= exp.is_current ? 'var(--green)' : 'var(--text-muted)' %>">
+              <%= exp.start_date || '' %><% if(exp.is_current){ %> → <span data-i18n="exp_current">Devam Ediyor</span><% } else if(exp.end_date){ %> → <%= exp.end_date %><% } %>
+            </span>
+          </div>
+          <% if(exp.description) { %><p class="timeline-desc"><%= exp.description %></p><% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills-section" id="skills">
+    <canvas id="sphere-skills" class="section-sphere section-sphere-right" width="200" height="200"></canvas>
+    <div class="section-header">
+      <div class="section-tag" data-i18n="sec_skills">/ Yetenekler</div>
+      <h2 class="section-title" data-i18n="sec_skills_title">Teknoloji Stack</h2>
+    </div>
+    <div class="skills-container">
+      <%
+        const categories = [...new Set(skills.map(s => s.category))];
+        categories.forEach(function(cat) {
+          const catSkills = skills.filter(s => s.category === cat);
+      %>
+      <div class="skill-group">
+        <h3 class="skill-group-title"><%= cat %></h3>
+        <div class="skill-list">
+          <% catSkills.forEach(function(skill) { %>
+          <div class="skill-item">
+            <div class="skill-info"><span class="skill-name"><%= skill.name %></span><span class="skill-level"><%= skill.level %>%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:0%" data-width="<%= skill.level %>%"></div></div>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <canvas id="sphere-about" class="section-sphere section-sphere-left" width="200" height="200"></canvas>
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-tag" data-i18n="sec_about">/ Hakkımda</div>
+        <h2 class="section-title">
+          <span data-i18n="sec_about_title">Merhaba, Ben</span><br>
+          <span class="name-highlight" data-i18n="sec_about_sub">Bir Yazılım Mühendisiyim</span>
+        </h2>
+        <p class="about-desc"><%= settings.about_text || 'Bilgisayar Mühendisliği mezunu, modern web teknolojileri ile kullanıcı odaklı uygulamalar geliştiriyorum.' %></p>
+        <div class="about-tags">
+          <span class="about-tag">🎓 Bilgisayar Müh.</span>
+          <span class="about-tag">💻 Full-Stack Dev</span>
+          <span class="about-tag">🚀 Open Source</span>
+          <span class="about-tag">☁️ Cloud Native</span>
+        </div>
+        <div class="about-links">
+          <% if(settings.github_url) { %><a href="<%= settings.github_url %>" target="_blank" class="about-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg><span data-i18n="about_btn_github">GitHub</span></a><% } %>
+          <% if(settings.linkedin_url) { %><a href="<%= settings.linkedin_url %>" target="_blank" class="about-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg><span data-i18n="about_btn_linkedin">LinkedIn</span></a><% } %>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <span class="t-dot red"></span><span class="t-dot yellow"></span><span class="t-dot green"></span>
+            <span class="t-title">about.json</span>
+          </div>
+          <div class="terminal-body">
+            <pre><code><span class="t-bracket">{</span>
+  <span class="t-key">"name"</span>: <span class="t-str">"Full-Stack Developer"</span>,
+  <span class="t-key">"education"</span>: <span class="t-str">"Bilgisayar Mühendisliği"</span>,
+  <span class="t-key">"experience"</span>: <span class="t-str">"3+ years"</span>,
+  <span class="t-key">"location"</span>: <span class="t-str">"Türkiye 🇹🇷"</span>,
+  <span class="t-key">"status"</span>: <span class="t-green">"available"</span>,
+  <span class="t-key">"passion"</span>: [
+    <span class="t-str">"Clean Code"</span>,
+    <span class="t-str">"Performance"</span>,
+    <span class="t-str">"Innovation"</span>
+  ],
+  <span class="t-key">"coffee"</span>: <span class="t-num">∞</span>
+<span class="t-bracket">}</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUBSCRIBE -->
+  <section class="subscribe-section">
+    <div class="subscribe-inner">
+      <div class="section-tag" data-i18n="sub_tag">/ Haberdar Ol</div>
+      <h2 class="subscribe-title" data-i18n="sub_title">Yeni Projelerimden Haberdar Olun</h2>
+      <p class="subscribe-desc" data-i18n="sub_desc">Yeni proje lansmanları ve güncellemeler için bültenime Takip Edin.</p>
+      <form class="subscribe-form" id="subscribeForm">
+        <input type="text" id="subName" class="sub-input" placeholder="Adınız" data-i18n="sub_name">
+        <input type="email" id="subEmail" class="sub-input" placeholder="E-posta adresiniz" data-i18n="sub_email" required>
+        <button type="submit" class="btn-primary"><span data-i18n="sub_btn">Takip Et</span></button>
+      </form>
+      <div id="subscribeMsg" class="form-message" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <canvas id="sphere-contact" class="section-sphere section-sphere-right" width="200" height="200"></canvas>
+    <div class="section-header">
+      <div class="section-tag" data-i18n="contact_tag">/ İletişim</div>
+      <h2 class="section-title" data-i18n="contact_title">Konuşalım</h2>
+      <p class="section-desc" data-i18n="contact_desc">Bir projeniz mi var? Birlikte çalışalım.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span><%= settings.email || 'hello@example.com' %></span>
+        </div>
+        <div class="contact-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span data-i18n="contact_response">Yanıt süresi: ~24 saat</span>
+        </div>
+        <div class="availability-badge">
+          <span class="avail-dot"></span>
+          <span data-i18n="contact_available">Yeni projeler için müsaitim</span>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="contact_name">Ad Soyad</label><input type="text" id="contactName" placeholder="John Doe" data-i18n="contact_name_ph" required></div>
+          <div class="form-group"><label data-i18n="contact_email">E-posta</label><input type="email" id="contactEmail" placeholder="john@example.com" required></div>
+        </div>
+        <div class="form-group"><label data-i18n="contact_subject">Konu</label><input type="text" id="contactSubject" placeholder="Proje hakkında..." data-i18n="contact_subject_ph"></div>
+        <div class="form-group"><label data-i18n="contact_message">Mesaj</label><textarea id="contactMessage" rows="5" placeholder="Projenizi anlatın..." data-i18n="contact_msg_ph" required></textarea></div>
+        <button type="submit" class="btn-primary btn-full"><span data-i18n="contact_btn">Mesaj Gönder</span></button>
+        <div id="contactMsg" class="form-message" style="display:none"></div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-img-wrap">
+          <% if (settings.logo_url) { %>
+            <img src="<%= settings.logo_url %>" alt="logo" class="logo-img" style="width:22px;height:22px;">
+          <% } else { %>
+            <svg class="logo-svg" width="22" height="22" viewBox="0 0 28 28">
+              <polygon points="14,2 26,24 2,24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+              <polygon points="14,2 26,24 2,24" fill="currentColor" opacity="0.15"/>
+            </svg>
+          <% } %>
+        </div>
+        <span><%= settings.site_name || 'DEV.IO' %></span>
+      </div>
+      <p class="footer-text" data-i18n="footer_text">Türkiye'den dünyaya kod yazıyorum 🇹🇷</p>
+      <div class="footer-links">
+        <% if(settings.github_url) { %><a href="<%= settings.github_url %>" target="_blank">GitHub</a><% } %>
+        <% if(settings.linkedin_url) { %><a href="<%= settings.linkedin_url %>" target="_blank">LinkedIn</a><% } %>
+        <a href="mailto:<%= settings.email || '' %>">Email</a>
+      </div>
+      <p class="footer-copy">© <%= new Date().getFullYear() %> · Tüm hakları saklıdır</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

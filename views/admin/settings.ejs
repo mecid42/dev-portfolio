@@ -1,0 +1,110 @@
+<%- include('_sidebar', { page: 'settings', adminUsername }) %>
+  <div class="main">
+    <div class="topbar"><div class="page-title">Site Ayarları</div></div>
+    <div class="content">
+      <% if (success) { %><div class="alert alert-success">✓ Kaydedildi.</div><% } %>
+
+      <!-- LOGO YÜKLEYİCİ -->
+      <div class="form-card" style="margin-bottom:20px">
+        <h3 style="font-family:'Syne',sans-serif;font-size:15px;margin-bottom:6px;color:#ececec">Logo</h3>
+        <p style="color:#444;font-size:12px;margin-bottom:20px">Navbar ve footer'da görünür. PNG/SVG/WebP, max 2MB. Şeffaf arka planlı PNG önerilir.</p>
+
+        <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+
+          <!-- Mevcut Logo Önizleme -->
+          <div id="logoPreviewBox" style="width:80px;height:80px;border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:flex;align-items:center;justify-content:center;background:#111;flex-shrink:0">
+            <% if (settings.logo_url) { %>
+              <img id="logoPreview" src="<%= settings.logo_url %>" style="max-width:60px;max-height:60px;object-fit:contain">
+            <% } else { %>
+              <svg id="logoPreview" width="36" height="36" viewBox="0 0 28 28">
+                <polygon points="14,2 26,24 2,24" fill="none" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
+                <polygon points="14,2 26,24 2,24" fill="white" opacity="0.15"/>
+              </svg>
+            <% } %>
+          </div>
+
+          <!-- Upload Alanı -->
+          <div>
+            <div id="logoDropzone" style="border:1px dashed rgba(255,255,255,0.15);border-radius:8px;padding:18px 28px;cursor:pointer;text-align:center;transition:border-color .2s;min-width:200px"
+                 onclick="document.getElementById('logoFileInput').click()"
+                 ondragover="event.preventDefault();this.style.borderColor='#3b82f6'"
+                 ondragleave="this.style.borderColor='rgba(255,255,255,0.15)'"
+                 ondrop="handleLogoDrop(event)">
+              <div style="font-size:22px;margin-bottom:6px">📁</div>
+              <div style="color:#888;font-size:12px">Tıkla veya sürükle bırak</div>
+              <div style="color:#444;font-size:10px;margin-top:4px;font-family:'JetBrains Mono',monospace">PNG · SVG · WebP · max 2MB</div>
+            </div>
+            <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="uploadLogo(this.files[0])">
+            <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+              <div id="logoUploadStatus" style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace"></div>
+              <% if (settings.logo_url) { %>
+              <form method="POST" action="/admin/settings/logo/remove" style="margin:0">
+                <button type="submit" class="action-btn delete" style="font-size:10px" onclick="return confirm('Logoyu kaldır, varsayılan üçgen kullanılsın?')">Kaldır</button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DİĞER AYARLAR -->
+      <div class="form-card">
+        <h3 style="font-family:'Syne',sans-serif;font-size:15px;margin-bottom:20px;color:#ececec">Genel Bilgiler</h3>
+        <form method="POST" action="/admin/settings">
+          <div class="form-row">
+            <div class="form-group"><label>Site Adı (Logo Yanı)</label><input type="text" name="site_name" class="form-control" value="<%= settings.site_name||'' %>"></div>
+            <div class="form-group"><label>E-posta</label><input type="email" name="email" class="form-control" value="<%= settings.email||'' %>"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>GitHub URL</label><input type="url" name="github_url" class="form-control" value="<%= settings.github_url||'' %>"></div>
+            <div class="form-group"><label>LinkedIn URL</label><input type="url" name="linkedin_url" class="form-control" value="<%= settings.linkedin_url||'' %>"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>CV URL</label><input type="url" name="cv_url" class="form-control" value="<%= settings.cv_url||'' %>"></div>
+          </div>
+          <div class="form-actions"><button type="submit" class="btn-sm primary">Kaydet →</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  async function uploadLogo(file) {
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      document.getElementById('logoUploadStatus').textContent = '❌ Dosya 2MB\'dan büyük!';
+      document.getElementById('logoUploadStatus').style.color = '#ef4444';
+      return;
+    }
+    const status = document.getElementById('logoUploadStatus');
+    status.textContent = 'Yükleniyor...';
+    status.style.color = '#3b82f6';
+
+    const buf = await file.arrayBuffer();
+    const res = await fetch('/admin/settings/logo', {
+      method: 'POST',
+      headers: { 'Content-Type': file.type },
+      body: buf,
+    });
+    const data = await res.json();
+    if (data.success) {
+      // Update preview
+      const preview = document.getElementById('logoPreview');
+      const box = document.getElementById('logoPreviewBox');
+      box.innerHTML = `<img id="logoPreview" src="${data.url}" style="max-width:60px;max-height:60px;object-fit:contain">`;
+      status.textContent = '✓ Logo güncellendi — sayfayı yenile';
+      status.style.color = '#22c55e';
+    } else {
+      status.textContent = '❌ ' + (data.message || 'Hata');
+      status.style.color = '#ef4444';
+    }
+  }
+
+  function handleLogoDrop(e) {
+    e.preventDefault();
+    document.getElementById('logoDropzone').style.borderColor = 'rgba(255,255,255,0.15)';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) uploadLogo(file);
+  }
+  </script>
+</body></html>

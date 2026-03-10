@@ -1,0 +1,87 @@
+<%- include('_sidebar', { page: 'projects', adminUsername }) %>
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title"><%= project ? 'Proje Düzenle' : 'Yeni Proje' %></div>
+      <div class="topbar-actions">
+        <a href="/admin/projects" class="btn-sm">← Geri</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="form-card">
+        <form method="POST" action="/admin/projects/<%= project ? project.id + '/edit' : 'new' %>">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Proje Adı *</label>
+              <input type="text" name="title" class="form-control" value="<%= project ? project.title : '' %>" required placeholder="Proje adı...">
+            </div>
+            <div class="form-group">
+              <label>Kategori</label>
+              <select name="category" class="form-control">
+                <% ['web','mobile','ai','devops','other'].forEach(function(cat) { %>
+                <option value="<%= cat %>" <%= project && project.category === cat ? 'selected' : '' %>><%= cat.toUpperCase() %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Kısa Açıklama *</label>
+            <input type="text" name="description" class="form-control" value="<%= project ? project.description : '' %>" required placeholder="Bir cümleyle projeyi anlat...">
+          </div>
+          <div class="form-group">
+            <label>Uzun Açıklama</label>
+            <textarea name="long_description" class="form-control" rows="4" placeholder="Detaylı proje açıklaması..."><%= project ? project.long_description : '' %></textarea>
+          </div>
+          <div class="form-group">
+            <label>Teknoloji Stack (virgülle ayır)</label>
+            <input type="text" name="tech_stack" class="form-control" value="<%= project ? project.tech_stack : '' %>" required placeholder="React, Node.js, PostgreSQL...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Durum</label>
+              <select name="status" class="form-control">
+                <option value="planned" <%= project && project.status === 'planned' ? 'selected' : '' %>>Planlanıyor</option>
+                <option value="in_progress" <%= project && project.status === 'in_progress' ? 'selected' : '' %>>Devam Ediyor</option>
+                <option value="delivered" <%= project && project.status === 'delivered' ? 'selected' : '' %>>Teslim Edildi</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Sıralama</label>
+              <input type="number" name="sort_order" class="form-control" value="<%= project ? project.sort_order : 0 %>" min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Başlangıç Tarihi</label>
+              <input type="date" name="start_date" class="form-control" value="<%= project && project.start_date ? project.start_date.split('T')[0] : '' %>">
+            </div>
+            <div class="form-group">
+              <label>Bitiş Tarihi</label>
+              <input type="date" name="end_date" class="form-control" value="<%= project && project.end_date ? project.end_date.split('T')[0] : '' %>">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>GitHub URL</label>
+              <input type="url" name="github_url" class="form-control" value="<%= project ? project.github_url : '' %>" placeholder="https://github.com/...">
+            </div>
+            <div class="form-group">
+              <label>Canlı URL</label>
+              <input type="url" name="live_url" class="form-control" value="<%= project ? project.live_url : '' %>" placeholder="https://...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" name="featured" value="1" <%= project && project.featured ? 'checked' : '' %> style="width:16px;height:16px;accent-color:#3b82f6">
+              Öne Çıkan Proje (ana sayfada göster)
+            </label>
+          </div>
+          <div class="form-actions">
+            <a href="/admin/projects" class="btn-sm">İptal</a>
+            <button type="submit" class="btn-sm primary"><%= project ? 'Güncelle' : 'Kaydet' %> →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<%- include('_sidebar', { page: 'likes', adminUsername }) %>
+  <div class="main">
+    <div class="topbar"><div class="page-title">Beğeniler</div></div>
+    <div class="content">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">
+        <div class="form-card">
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;margin-bottom:16px;color:#ececec">🏆 En Çok Beğenilen Projeler</h3>
+          <% topProjects.forEach(function(p) { %>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+            <span style="color:#ececec"><%= p.title || 'Bilinmeyen' %></span>
+            <span class="badge badge-red" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444">❤️ <%= p.likes %></span>
+          </div>
+          <% }) %>
+          <% if (!topProjects.length) { %><p style="color:#444;text-align:center;padding:20px">Henüz beğeni yok</p><% } %>
+        </div>
+        <div class="form-card">
+          <h3 style="font-family:'Syne',sans-serif;font-size:14px;margin-bottom:16px;color:#ececec">📊 İstatistikler</h3>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between"><span style="color:#666">Toplam Beğeni</span><span style="color:#ececec;font-family:'JetBrains Mono',monospace"><%= likes.length %></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header"><div class="table-title">Son Beğeniler</div></div>
+        <table>
+          <thead><tr><th>Proje</th><th>Oturum ID</th><th>Zaman</th></tr></thead>
+          <tbody>
+            <% likes.forEach(function(l) { %>
+            <tr>
+              <td style="color:#ececec"><%= l.project_title || 'Silinmiş Proje' %></td>
+              <td style="color:#555;font-family:'JetBrains Mono',monospace;font-size:10px"><%= l.session_id.substring(0,16) %>...</td>
+              <td style="color:#444;font-size:11px"><%= new Date(l.created_at).toLocaleString('tr-TR') %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body></html>

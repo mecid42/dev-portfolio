@@ -1,0 +1,14 @@
+<%- include('_sidebar', { page: 'contact-settings', adminUsername }) %>
+  <div class="main">
+    <div class="topbar"><div class="page-title">İletişim Ayarları</div></div>
+    <div class="content">
+      <% if (success) { %><div class="alert alert-success">✓ Kaydedildi.</div><% } %>
+      <div class="form-card">
+        <form method="POST" action="/admin/contact-settings">
+          <div class="form-group"><label>E-posta Adresi</label><input type="email" name="email" class="form-control" value="<%= settings.email||'' %>"></div>
+          <div class="form-actions"><button type="submit" class="btn-sm primary">Kaydet →</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body></html>

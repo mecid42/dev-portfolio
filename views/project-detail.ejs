@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= project.title %> | <%= settings.site_name || 'Portfolio' %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .detail-hero { padding: 140px 80px 80px; border-bottom: 1px solid var(--border); }
+    .breadcrumb { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 32px; }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text); }
+    .detail-title { font-family: var(--font-display); font-size: clamp(36px,6vw,72px); font-weight: 800; letter-spacing: -2px; color: #fff; margin-bottom: 16px; }
+    .detail-meta { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+    .detail-body { max-width: 800px; margin: 0 auto; padding: 80px; }
+    .detail-desc { color: var(--text-muted); font-size: 15px; line-height: 1.9; margin-bottom: 40px; }
+    .detail-section-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .timeline { display: flex; align-items: center; gap: 16px; padding: 20px; background: var(--bg-3); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 32px; }
+    .timeline-date { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+    .timeline-arrow { color: var(--border); }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-logo">
+      <div class="logo-mark"><svg width="22" height="22" viewBox="0 0 28 28"><polygon points="14,2 26,24 2,24" fill="white"/></svg></div>
+      <span class="logo-text"><%= settings.site_name || 'Dev.Portfolio' %></span>
+    </div>
+    <div class="nav-links">
+      <a href="/">Ana Sayfa</a>
+      <a href="/projects">Projeler</a>
+      <a href="/#contact">İletişim</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/projects" class="btn-nav-secondary">← Geri</a>
+    </div>
+  </nav>
+
+  <section class="detail-hero" style="position:relative;z-index:1">
+    <div class="breadcrumb">
+      <a href="/">Ana Sayfa</a> / <a href="/projects">Projeler</a> / <%= project.title %>
+    </div>
+    <div class="detail-meta" style="margin-bottom:20px">
+      <span class="project-category" style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--text-muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:4px 10px"><%= project.category.toUpperCase() %></span>
+      <div class="project-status status-<%= project.status %>" style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;padding:4px 10px;border-radius:100px;border:1px solid">
+        <span class="status-dot"></span>
+        <%= project.status === 'delivered' ? 'Teslim Edildi' : project.status === 'in_progress' ? 'Devam Ediyor' : 'Planlanıyor' %>
+      </div>
+    </div>
+    <h1 class="detail-title"><%= project.title %></h1>
+    <p style="color:var(--text-muted);font-size:16px;max-width:600px"><%= project.description %></p>
+  </section>
+
+  <div class="detail-body" style="position:relative;z-index:1">
+    <% if (project.start_date) { %>
+    <div class="timeline">
+      <span class="timeline-date">Başlangıç: <%= new Date(project.start_date).toLocaleDateString('tr-TR', {month:'long',year:'numeric'}) %></span>
+      <span class="timeline-arrow">→</span>
+      <% if (project.status === 'delivered' && project.end_date) { %>
+      <span class="timeline-date">Bitiş: <%= new Date(project.end_date).toLocaleDateString('tr-TR', {month:'long',year:'numeric'}) %></span>
+      <% } else if (project.status === 'in_progress') { %>
+      <div class="project-status status-in_progress" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;padding:4px 10px;border-radius:100px;border:1px solid rgba(59,130,246,0.3);background:rgba(59,130,246,0.08);color:#3b82f6">
+        <span style="width:5px;height:5px;border-radius:50%;background:#3b82f6;animation:pulse-dot 2s infinite"></span>
+        Hâlâ devam ediyor...
+      </div>
+      <% } %>
+    </div>
+    <% } %>
+
+    <% if (project.long_description) { %>
+    <div class="detail-section-title" style="margin-top:32px">Proje Hakkında</div>
+    <p class="detail-desc"><%= project.long_description %></p>
+    <% } %>
+
+    <div class="detail-section-title">Teknoloji Stack</div>
+    <div class="tech-stack" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px">
+      <% project.tech_stack.split(',').forEach(function(tech) { %>
+      <span class="tech-tag" style="font-family:var(--font-mono);font-size:12px;padding:6px 14px;border:1px solid var(--border);border-radius:6px;color:var(--text-dim)"><%= tech.trim() %></span>
+      <% }) %>
+    </div>
+
+    <div style="display:flex;gap:12px">
+      <% if (project.github_url) { %>
+      <a href="<%= project.github_url %>" target="_blank" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        GitHub
+      </a>
+      <% } %>
+      <% if (project.live_url) { %>
+      <a href="<%= project.live_url %>" target="_blank" class="btn-primary">
+        Canlıya Bak →
+      </a>
+      <% } %>
+      <a href="/projects" class="btn-secondary">← Tüm Projeler</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg width="20" height="20" viewBox="0 0 28 28"><polygon points="14,2 26,24 2,24" fill="white"/></svg>
+        <span><%= settings.site_name || 'Dev.Portfolio' %></span>
+      </div>
+      <p class="footer-copy">© 2024</p>
+    </div>
+  </footer>
+  <canvas id="bg-canvas"></canvas>
+  <script src="/js/main.js"></script>
+</body>
+</html>

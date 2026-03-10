@@ -1,0 +1,56 @@
+<%- include('_sidebar', { page: 'projects', adminUsername }) %>
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title">Projeler</div>
+      <div class="topbar-actions">
+        <a href="/admin/projects/new" class="btn-sm primary">+ Yeni Proje</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Proje Adı</th>
+              <th>Kategori</th>
+              <th>Durum</th>
+              <th>Öne Çıkan</th>
+              <th>Başlangıç</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% projects.forEach(function(p) { %>
+            <tr>
+              <td style="color:#333"><%= p.sort_order %></td>
+              <td style="color:#ececec;font-weight:500"><%= p.title %></td>
+              <td><span class="badge badge-blue"><%= p.category %></span></td>
+              <td>
+                <% if (p.status === 'delivered') { %>
+                <span class="badge badge-green">Teslim Edildi</span>
+                <% } else if (p.status === 'in_progress') { %>
+                <span class="badge badge-blue">Devam Ediyor</span>
+                <% } else { %>
+                <span class="badge badge-orange">Planlanıyor</span>
+                <% } %>
+              </td>
+              <td><%= p.featured ? '⭐' : '-' %></td>
+              <td style="color:#555"><%= p.start_date ? new Date(p.start_date).toLocaleDateString('tr-TR') : '-' %></td>
+              <td>
+                <div style="display:flex;gap:8px">
+                  <a href="/admin/projects/<%= p.id %>/edit" class="action-btn edit">Düzenle</a>
+                  <form method="POST" action="/admin/projects/<%= p.id %>/delete" style="display:inline" onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
+                    <button type="submit" class="action-btn delete">Sil</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

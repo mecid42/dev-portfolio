@@ -1,0 +1,30 @@
+<%- include('_sidebar', { page: 'messages', adminUsername }) %>
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title">Mesajlar (<%= messages.length %>)</div>
+    </div>
+    <div class="content">
+      <% if (messages.length === 0) { %>
+      <div class="table-wrap"><div style="text-align:center;padding:60px;color:#444">Henüz mesaj yok</div></div>
+      <% } %>
+      <% messages.forEach(function(m) { %>
+      <div class="table-wrap" style="margin-bottom:16px">
+        <div class="table-header">
+          <div>
+            <span style="color:#ececec;font-weight:600"><%= m.name %></span>
+            <span style="color:#555;margin:0 8px">·</span>
+            <span style="color:#666"><%= m.email %></span>
+            <% if (m.subject) { %>
+            <span style="color:#555;margin:0 8px">·</span>
+            <span style="color:#3b82f6"><%= m.subject %></span>
+            <% } %>
+          </div>
+          <span style="color:#444;font-size:11px"><%= new Date(m.sent_at).toLocaleString('tr-TR') %></span>
+        </div>
+        <div style="padding:20px;color:#999;line-height:1.8"><%= m.message %></div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

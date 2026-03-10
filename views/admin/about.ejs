@@ -1,0 +1,19 @@
+<%- include('_sidebar', { page: 'about', adminUsername }) %>
+  <div class="main">
+    <div class="topbar"><div class="page-title">Hakkımda Bölümü</div></div>
+    <div class="content">
+      <% if (success) { %><div class="alert alert-success">✓ Kaydedildi.</div><% } %>
+      <div class="form-card">
+        <form method="POST" action="/admin/about">
+          <div class="form-group"><label>Site Adı</label><input type="text" name="site_name" class="form-control" value="<%= settings.site_name||'' %>"></div>
+          <div class="form-group"><label>Hakkımda Metni</label><textarea name="about_text" class="form-control" rows="5"><%= settings.about_text||'' %></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>GitHub URL</label><input type="url" name="github_url" class="form-control" value="<%= settings.github_url||'' %>"></div>
+            <div class="form-group"><label>LinkedIn URL</label><input type="url" name="linkedin_url" class="form-control" value="<%= settings.linkedin_url||'' %>"></div>
+          </div>
+          <div class="form-actions"><button type="submit" class="btn-sm primary">Kaydet →</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body></html>

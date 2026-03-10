@@ -1,0 +1,165 @@
+<%- include('_sidebar', { page: 'dashboard', adminUsername }) %>
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title">Dashboard</div>
+      <div class="topbar-actions">
+        <a href="/admin/projects/new" class="btn-sm primary">+ Yeni Proje</a>
+        <a href="/" target="_blank" class="btn-sm">Siteyi Gör ↗</a>
+      </div>
+    </div>
+    <div class="content">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-label">Toplam Ziyaret</div>
+          <div class="stat-card-num"><%= stats.total_visitors.toLocaleString() %></div>
+          <div class="stat-card-sub">Tüm zamanlar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Tekil Ziyaretçi</div>
+          <div class="stat-card-num"><%= stats.unique_visitors.toLocaleString() %></div>
+          <div class="stat-card-sub">Benzersiz oturum</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Projeler</div>
+          <div class="stat-card-num"><%= stats.total_projects %></div>
+          <div class="stat-card-sub"><%= stats.delivered_projects %> teslim edildi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Aboneler</div>
+          <div class="stat-card-num"><%= stats.subscribers %></div>
+          <div class="stat-card-sub">Aktif abone</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Okunmamış Mesaj</div>
+          <div class="stat-card-num" style="color: <%= stats.unread_messages > 0 ? '#f97316' : '#22c55e' %>"><%= stats.unread_messages %></div>
+          <div class="stat-card-sub"><a href="/admin/messages" style="color: #666; text-decoration:none;">Mesajları gör →</a></div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Son 30 Gün Ziyaretçi</div>
+          <canvas id="visitorChart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Ülkelere Göre</div>
+          <canvas id="countryChart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Tarayıcı Dağılımı</div>
+          <canvas id="browserChart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Cihaz Tipi</div>
+          <canvas id="deviceChart" height="200"></canvas>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <!-- Top Pages -->
+        <div class="table-wrap">
+          <div class="table-header"><div class="table-title">En Çok Ziyaret Edilen Sayfalar</div></div>
+          <table>
+            <thead><tr><th>Sayfa</th><th>Ziyaret</th></tr></thead>
+            <tbody>
+              <% topPages.forEach(function(p) { %>
+              <tr><td><%= p.page %></td><td><span class="badge badge-blue"><%= p.visits %></span></td></tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Visitors -->
+        <div class="table-wrap">
+          <div class="table-header"><div class="table-title">Son Ziyaretçiler</div></div>
+          <table>
+            <thead><tr><th>Ülke</th><th>Tarayıcı</th><th>Cihaz</th><th>Zaman</th></tr></thead>
+            <tbody>
+              <% recentVisitors.forEach(function(v) { %>
+              <tr>
+                <td><%= v.country %></td>
+                <td><%= v.browser %></td>
+                <td><span class="badge badge-<%= v.device === 'mobile' ? 'orange' : 'blue' %>"><%= v.device %></span></td>
+                <td style="color:#444"><%= new Date(v.visited_at).toLocaleString('tr-TR', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}) %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const chartDefaults = {
+  plugins: { legend: { labels: { color: '#666', font: { family: 'JetBrains Mono', size: 11 } } } },
+  scales: {
+    x: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+    y: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } }
+  }
+};
+
+// Visitor Chart
+const vData = <%- JSON.stringify(visitorsByDay) %>;
+new Chart(document.getElementById('visitorChart'), {
+  type: 'line',
+  data: {
+    labels: vData.map(d => d.date ? d.date.slice(5) : ''),
+    datasets: [{
+      label: 'Ziyaretçi',
+      data: vData.map(d => d.visitors),
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59,130,246,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 3,
+      pointBackgroundColor: '#3b82f6'
+    }]
+  },
+  options: { ...chartDefaults, plugins: { legend: { display: false } }, responsive: true }
+});
+
+// Country Chart
+const cData = <%- JSON.stringify(topCountries.slice(0,6)) %>;
+new Chart(document.getElementById('countryChart'), {
+  type: 'bar',
+  data: {
+    labels: cData.map(d => d.country),
+    datasets: [{
+      label: 'Ziyaretçi',
+      data: cData.map(d => d.visitors),
+      backgroundColor: 'rgba(59,130,246,0.6)',
+      borderColor: '#3b82f6',
+      borderWidth: 1,
+      borderRadius: 4
+    }]
+  },
+  options: { ...chartDefaults, plugins: { legend: { display: false } }, responsive: true }
+});
+
+// Browser Chart
+const bData = <%- JSON.stringify(browserStats) %>;
+new Chart(document.getElementById('browserChart'), {
+  type: 'doughnut',
+  data: {
+    labels: bData.map(d => d.browser),
+    datasets: [{ data: bData.map(d => d.count), backgroundColor: ['#3b82f6','#22c55e','#f97316','#a855f7','#ef4444'], borderWidth: 0 }]
+  },
+  options: { plugins: { legend: { labels: { color: '#666', font: { family: 'JetBrains Mono', size: 11 } } } }, responsive: true }
+});
+
+// Device Chart
+const dData = <%- JSON.stringify(deviceStats) %>;
+new Chart(document.getElementById('deviceChart'), {
+  type: 'doughnut',
+  data: {
+    labels: dData.map(d => d.device),
+    datasets: [{ data: dData.map(d => d.count), backgroundColor: ['#3b82f6','#22c55e','#f97316'], borderWidth: 0 }]
+  },
+  options: { plugins: { legend: { labels: { color: '#666', font: { family: 'JetBrains Mono', size: 11 } } } }, responsive: true }
+});
+</script>
+</body>
+</html>

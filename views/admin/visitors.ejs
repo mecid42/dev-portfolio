@@ -1,0 +1,109 @@
+<%- include('_sidebar', { page: 'visitors', adminUsername }) %>
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title">Ziyaretçiler</div>
+    </div>
+    <div class="content">
+      <% if (typeof saved !== 'undefined' && saved) { %><div class="alert alert-success" style="margin-bottom:16px">✓ Kaydedildi.</div><% } %>
+
+      <!-- STATS ROW -->
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-card-label">Toplam (offset dahil)</div>
+          <div class="stat-card-num" style="color:#3b82f6"><%= totalVisitors %></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Gerçek Ziyaretçi</div>
+          <div class="stat-card-num"><%= realVisitors %></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Eklenen Offset</div>
+          <div class="stat-card-num" style="color:#f97316"><%= offset %></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Bugün</div>
+          <div class="stat-card-num"><%= todayVisitors %></div>
+        </div>
+      </div>
+
+      <!-- OFFSET CONTROL -->
+      <div class="form-card" style="margin-bottom:20px;border-color:rgba(249,115,22,.2)">
+        <h3 style="font-family:'Syne',sans-serif;font-size:13px;color:#f97316;margin-bottom:14px">📊 Ziyaretçi Sayısı Ayarla</h3>
+        <p style="color:#555;font-size:11px;margin-bottom:14px">Sitede gösterilen sayıyı artır. Gerçek ziyaretçiler üstüne eklenir.</p>
+        <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+          <form method="POST" action="/admin/visitors/offset" style="display:flex;gap:8px;align-items:flex-end">
+            <div class="form-group" style="margin:0">
+              <label>Eklenecek Sayı</label>
+              <input type="number" name="add_count" class="form-control" placeholder="örn: 150" min="1" style="width:160px">
+            </div>
+            <button type="submit" class="btn-sm primary">+ Ekle</button>
+          </form>
+          <form method="POST" action="/admin/visitors/offset/reset" onsubmit="return confirm('Offset sıfırlansın mı?')">
+            <button type="submit" class="action-btn delete" style="padding:8px 14px">Sıfırla</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- VISITOR TABLE -->
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">Son Ziyaretçiler (<%= visitors.length %>)</div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>IP Adresi</th>
+                <th>Konum</th>
+                <th>Sayfa</th>
+                <th>Tarayıcı</th>
+                <th>İşletim Sistemi</th>
+                <th>Cihaz</th>
+                <th>Referrer</th>
+                <th>Zaman</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% visitors.forEach(function(v, i) { %>
+              <tr>
+                <td style="color:#333"><%= i+1 %></td>
+                <td>
+                  <span style="font-family:'JetBrains Mono',monospace;color:#3b82f6;font-size:11px"><%= v.ip || '-' %></span>
+                </td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <% if (v.country && v.country !== '?') { %>
+                    <span style="font-size:16px">
+                      <%
+                        const cc = v.country.toUpperCase();
+                        const flag = cc.split('').map(c => String.fromCodePoint(c.charCodeAt(0)+127397)).join('');
+                      %><%= flag %>
+                    </span>
+                    <% } %>
+                    <div>
+                      <div style="color:#ececec;font-size:12px"><%= v.country || '?' %></div>
+                      <% if (v.city && v.city !== '?') { %>
+                      <div style="color:#555;font-size:10px;font-family:'JetBrains Mono',monospace"><%= v.city %><% if(v.region) { %>, <%= v.region %><% } %></div>
+                      <% } %>
+                      <% if (v.lat && v.lon) { %>
+                      <div style="color:#333;font-size:10px;font-family:'JetBrains Mono',monospace"><%= parseFloat(v.lat).toFixed(2) %>, <%= parseFloat(v.lon).toFixed(2) %></div>
+                      <% } %>
+                    </div>
+                  </div>
+                </td>
+                <td style="color:#888;font-family:'JetBrains Mono',monospace;font-size:11px"><%= v.page %></td>
+                <td><span class="badge badge-blue"><%= v.browser || '?' %></span></td>
+                <td style="color:#555;font-size:11px"><%= v.os || '-' %></td>
+                <td><span class="badge <%= v.device==='mobile'?'badge-orange':v.device==='tablet'?'badge-green':'badge-blue' %>"><%= v.device||'desktop' %></span></td>
+                <td style="color:#444;font-size:10px;font-family:'JetBrains Mono',monospace;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="<%= v.referrer || '' %>"><%= v.referrer ? v.referrer.replace(/https?:\/\//,'').substring(0,30) : '-' %></td>
+                <td style="color:#444;font-size:11px;font-family:'JetBrains Mono',monospace;white-space:nowrap"><%= new Date(v.visited_at).toLocaleString('tr-TR') %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body></html>

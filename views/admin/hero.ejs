@@ -1,0 +1,16 @@
+<%- include('_sidebar', { page: 'hero', adminUsername }) %>
+  <div class="main">
+    <div class="topbar"><div class="page-title">Hero Bölümü</div></div>
+    <div class="content">
+      <% if (success) { %><div class="alert alert-success">✓ Kaydedildi.</div><% } %>
+      <div class="form-card">
+        <form method="POST" action="/admin/hero">
+          <div class="form-group"><label>Ana Başlık (BÜYÜK HARFLE görünür)</label><input type="text" name="hero_title" class="form-control" value="<%= settings.hero_title||'' %>" placeholder="BUILDING THE FUTURE"></div>
+          <div class="form-group"><label>Alt Başlık</label><input type="text" name="hero_subtitle" class="form-control" value="<%= settings.hero_subtitle||'' %>" placeholder="Full-Stack Developer & Computer Engineer"></div>
+          <div class="form-group"><label>CV Dosya URL</label><input type="url" name="cv_url" class="form-control" value="<%= settings.cv_url||'' %>" placeholder="https://...cv.pdf"></div>
+          <div class="form-actions"><button type="submit" class="btn-sm primary">Kaydet →</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body></html>

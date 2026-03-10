@@ -1,0 +1,38 @@
+<%- include('_sidebar', { page: 'danger', adminUsername }) %>
+  <div class="main">
+    <div class="topbar"><div class="page-title">⚠️ Tehlikeli Alan</div></div>
+    <div class="content">
+      <% if (typeof error !== 'undefined' && error) { %><div class="alert" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444;margin-bottom:20px"><%= error %></div><% } %>
+      <% const done = typeof locals.query !== 'undefined' ? '' : ''; %>
+
+      <div style="display:flex;flex-direction:column;gap:16px;max-width:600px">
+
+        <div class="form-card" style="border-color:rgba(239,68,68,.2)">
+          <h3 style="font-family:'Syne',sans-serif;font-size:15px;margin-bottom:8px;color:#ef4444">🔑 Şifre Değiştir</h3>
+          <p style="color:#555;font-size:12px;margin-bottom:16px">Admin paneli giriş şifrenizi değiştirin.</p>
+          <form method="POST" action="/admin/danger/change-password">
+            <div class="form-group"><label>Mevcut Şifre</label><input type="password" name="current_password" class="form-control" required></div>
+            <div class="form-group"><label>Yeni Şifre</label><input type="password" name="new_password" class="form-control" required minlength="6"></div>
+            <button type="submit" class="btn-sm primary">Şifreyi Değiştir</button>
+          </form>
+        </div>
+
+        <div class="form-card" style="border-color:rgba(239,68,68,.2)">
+          <h3 style="font-family:'Syne',sans-serif;font-size:15px;margin-bottom:8px;color:#ef4444">🗑️ Ziyaretçi Verilerini Temizle</h3>
+          <p style="color:#555;font-size:12px;margin-bottom:16px">Tüm ziyaretçi kayıtları silinecek. Bu işlem geri alınamaz!</p>
+          <form method="POST" action="/admin/danger/clear-visitors" onsubmit="return confirm('Tüm ziyaretçi verilerini silmek istediğinize emin misiniz?')">
+            <button type="submit" class="action-btn delete" style="padding:8px 16px">Ziyaretçileri Temizle</button>
+          </form>
+        </div>
+
+        <div class="form-card" style="border-color:rgba(239,68,68,.2)">
+          <h3 style="font-family:'Syne',sans-serif;font-size:15px;margin-bottom:8px;color:#ef4444">📧 Aboneleri Temizle</h3>
+          <p style="color:#555;font-size:12px;margin-bottom:16px">Tüm abone listesi silinecek. Bu işlem geri alınamaz!</p>
+          <form method="POST" action="/admin/danger/clear-subscribers" onsubmit="return confirm('Tüm aboneleri silmek istediğinize emin misiniz?')">
+            <button type="submit" class="action-btn delete" style="padding:8px 16px">Aboneleri Temizle</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body></html>

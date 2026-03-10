@@ -1,0 +1,29 @@
+<%- include('_sidebar', { page: 'subscribers', adminUsername }) %>
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title">Aboneler (<%= subscribers.length %>)</div>
+    </div>
+    <div class="content">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>İsim</th><th>E-posta</th><th>Durum</th><th>Abone Tarihi</th></tr></thead>
+          <tbody>
+            <% if (subscribers.length === 0) { %>
+            <tr><td colspan="5" style="text-align:center;color:#444;padding:40px">Henüz abone yok</td></tr>
+            <% } %>
+            <% subscribers.forEach(function(s, i) { %>
+            <tr>
+              <td style="color:#333"><%= i + 1 %></td>
+              <td style="color:#ececec"><%= s.name || '-' %></td>
+              <td style="color:#ececec"><%= s.email %></td>
+              <td><span class="badge <%= s.is_active ? 'badge-green' : 'badge-red' %>"><%= s.is_active ? 'Aktif' : 'Pasif' %></span></td>
+              <td style="color:#555"><%= new Date(s.subscribed_at).toLocaleDateString('tr-TR') %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
