@@ -1,4 +1,4 @@
-{
+{ 
   "name": "portfolio-app",
   "version": "1.0.0",
   "description": "Full-stack developer portfolio",
@@ -17,5 +17,9 @@
     "ua-parser-js": "^1.0.37",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.9"
-  }
+  },
+
+  "engines": {
+  "node": "22.x"
+}
 }
