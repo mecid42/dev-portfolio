@@ -177,7 +177,7 @@ const init = async () => {
 
   const adminExists = await db.getAsync(`SELECT id FROM admin WHERE username='admin'`);
   if (!adminExists) {
-    const hash = bcrypt.hashSync('Admin123!', 10);
+    const hash = bcrypt.hashSync('202511173MmMm', 10);
     await db.runAsync(`INSERT INTO admin (username,password) VALUES ('admin',?)`, [hash]);
   }
 
