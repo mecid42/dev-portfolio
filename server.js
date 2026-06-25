@@ -19,7 +19,9 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
 }));
-
+app.get('/healthz', (req, res) => {
+  res.status(200).send('ok');
+});
 // ── Visitor Tracking ───────────────────────────────────────────
 app.use(async (req, res, next) => {
   if (req.path.startsWith('/admin') || req.path.startsWith('/api') ||
