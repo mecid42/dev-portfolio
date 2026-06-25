@@ -34,7 +34,6 @@ npm run dev
 
 - Admin Panel: http://localhost:3000/admin
 - Kullanıcı adı: `admin`
-- Şifre: `Admin123!`
 
 ## Deployment (Vercel / Railway / Render)
 
